@@ -1,10 +1,14 @@
-// models/transaction.ts
-import mongoose, { Schema, models } from 'mongoose';
+import mongoose from 'mongoose';
 
-const TransactionSchema = new Schema({
-  amount: { type: Number, required: true },
-  description: { type: String, required: true },
-  date: { type: Date, required: true }
-}, { timestamps: true });
+const TransactionSchema = new mongoose.Schema({
+  amount: Number,
+  description: String,
+  date: Date,
+  category: {
+    type: String,
+    enum: ['Food', 'Transport', 'Utilities', 'Rent', 'Shopping', 'Health', 'Other'],
+    default: 'Other',
+  },
+});
 
-export const Transaction = models.Transaction || mongoose.model('Transaction', TransactionSchema);
+export default mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);

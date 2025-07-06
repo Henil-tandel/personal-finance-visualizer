@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
-
 interface Transaction {
   amount: number;
   date: string;
@@ -18,7 +17,6 @@ interface MonthlyTotal {
 export default function MonthlyExpensesChart({ refreshFlag }: { refreshFlag: boolean }) {
   const [chartData, setChartData] = useState<MonthlyTotal[]>([]);
   const [loading, setLoading] = useState(true);
-
   const groupByMonth = (transactions: Transaction[]): MonthlyTotal[] => {
     const monthlyTotals: { [key: string]: number } = {};
 

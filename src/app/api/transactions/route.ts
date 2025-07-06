@@ -1,6 +1,6 @@
 // app/api/transactions/route.ts
 import { connectDB } from '@/lib/db';
-import { Transaction } from '@/lib/models/transaction';
+import Transaction from '@/lib/models/transaction';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
@@ -12,26 +12,31 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   await connectDB();
   const body = await req.json();
-  const { amount, description, date } = body;
+  const { amount, description, date, category } = body;
 
-  if (!amount || !description || !date) {
+  if (!amount || !description || !date || !category) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  const newTransaction = await Transaction.create({ amount, description, date });
+  const newTransaction = await Transaction.create({ amount, description, date, category });
   return NextResponse.json(newTransaction);
 }
 
 export async function PUT(req: NextRequest) {
   await connectDB();
   const body = await req.json();
-  const { id, amount, description, date } = body;
+  const { id, amount, description, date, category } = body;
 
-  if (!id || !amount || !description || !date) {
+  if (!id || !amount || !description || !date || !category) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  const updated = await Transaction.findByIdAndUpdate(id, { amount, description, date }, { new: true });
+  const updated = await Transaction.findByIdAndUpdate(
+    id,
+    { amount, description, date, category },
+    { new: true }
+  );
+
   return NextResponse.json(updated);
 }
 

@@ -4,17 +4,25 @@ import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import TransactionForm from './TransactionForm';
 
 interface Transaction {
   _id: string;
   amount: number;
   description: string;
   date: string;
+  category: string;
 }
 
-export default function TransactionList({ refreshFlag }: { refreshFlag: boolean }) {
+interface Props {
+  refreshFlag: boolean;
+  onUpdateSuccess: () => void;
+}
+
+export default function TransactionList({ refreshFlag, onUpdateSuccess }: Props) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<Transaction | null>(null);
 
   const fetchData = async () => {
     try {
@@ -31,10 +39,17 @@ export default function TransactionList({ refreshFlag }: { refreshFlag: boolean 
     const res = await fetch(`/api/transactions?id=${id}`, { method: 'DELETE' });
     if (res.ok) {
       fetchData();
+      onUpdateSuccess(); // 🔁 Trigger global refresh
       toast.success('Transaction deleted.');
     } else {
       toast.error('Failed to delete transaction.');
     }
+  };
+
+  const handleUpdateSuccess = () => {
+    fetchData();
+    onUpdateSuccess(); // 🔁 Trigger global refresh
+    setEditing(null);
   };
 
   useEffect(() => {
@@ -42,8 +57,17 @@ export default function TransactionList({ refreshFlag }: { refreshFlag: boolean 
   }, [refreshFlag]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <h2 className="text-xl font-semibold text-gray-700">📋 Transactions</h2>
+
+      {editing && (
+        <TransactionForm
+          editingTransaction={editing}
+          onSuccess={handleUpdateSuccess}
+          onCancelEdit={() => setEditing(null)}
+        />
+      )}
+
       {loading ? (
         <p>Loading transactions...</p>
       ) : transactions.length === 0 ? (
@@ -57,12 +81,17 @@ export default function TransactionList({ refreshFlag }: { refreshFlag: boolean 
             <div>
               <p className="font-medium text-gray-800">{tx.description}</p>
               <p className="text-sm text-gray-500">
-                ₹{tx.amount} on {new Date(tx.date).toLocaleDateString()}
+                ₹{tx.amount} | {tx.category} | {new Date(tx.date).toLocaleDateString()}
               </p>
             </div>
-            <Button variant="destructive" onClick={() => handleDelete(tx._id)}>
-              Delete
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setEditing(tx)}>
+                Edit
+              </Button>
+              <Button variant="destructive" onClick={() => handleDelete(tx._id)}>
+                Delete
+              </Button>
+            </div>
           </Card>
         ))
       )}
