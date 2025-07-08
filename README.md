@@ -6,14 +6,17 @@ A simple and responsive web app to track personal transactions and visualize mon
 
 ##  Features
 
- Add, edit, and delete transactions with validation   
- Monthly expenses bar chart (Recharts)  
- Category-wise pie chart  
- Recent transactions & category summaries  
- Form auto-switches to update mode when editing  
- Clean, responsive, and modern UI (shadcn/ui + Tailwind)  
- Toast notifications using Sonner  
- Fully client-side rendered with clean state management  
+- Add, edit, and delete transactions with validation  
+- Monthly expenses bar chart (Recharts)  
+- Category-wise pie chart  
+- Recent transactions & category summaries  
+- Form auto-switches to update mode when editing  
+- Clean, responsive, and modern UI (shadcn/ui + Tailwind)  
+- Toast notifications using Sonner  
+- Fully client-side rendered with clean state management  
+- **Set and track monthly budgets**
+- **Edit budgets for any month**
+- **See spending insights: total, average, top category, and most expensive month**
 
 ---
 
@@ -50,4 +53,4 @@ touch .env.local
 MONGODB_URI=your_mongodb_connection_string
 
 # 3. Run the development server
-npm run dev
+npm run
